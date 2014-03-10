@@ -24,6 +24,7 @@ HIGH PRIORITY
 - next step: outposts
 - regiments' move rate (from terrain) should be based on slowest unit
 - restore monsters attacking (damaging) structures
+- fix map preview screen
 
 
 MEDIUM PRIORITY
