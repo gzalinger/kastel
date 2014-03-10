@@ -1,0 +1,91 @@
+
+HIGH PRIORITY
+- tower fight positions for large regiments (2 and 5 are done)
+-redo splash damage so it covers actual number of sub-tiles
+- map editor
+	-> make restrictions panel
+	-> FINISH: map editor panel 
+		- add function to all buttons (terrain, spawn points, structures, village structures, towers)
+		- make copy of all stuff (terrain, initial city) when editor panel is created
+	-> make attack wave editor panel
+== == == == == == == == == == == == == == == == ==
+- repairing damage at village structures
+- walls around unfinished structures shouldn't count
+- second column for control panel when there's too much stuff
+- next step: stop 1-to-1 relationship between tiles and regiments
+	-> handle large engineer regiments (e.g. 5) working on towers
+		- ignore paths that are too long, limit search distance
+	-> return monsters to formation after tower fights
+	-> fighting walls
+	-> melees
+	-> handle units in marching formation getting killed (e.g. by towers)
+	-> redo monster AI (restore attacking various things)
+	-> engineers should return to formation after working on a tower
+- next step: outposts
+- regiments' move rate (from terrain) should be based on slowest unit
+- restore monsters attacking (damaging) structures
+
+
+MEDIUM PRIORITY
+- improve/overhaul monster AI
+- examples of horse and mechanical units
+- add all structures (with images), complete tech tree
+- towers can't be attacked when they have two adjacent walls
+- archer towers w/ stone (other than current level 2 tower) [design]
+- shutter farms when all adjacent hamlets are gone
+- pause / unpause button for defense phase
+- add "snipe" spell to give players something to do
+
+LOW PRIORITY
+- refine 'which tile did you click on' logic (cuz your current version sucks)
+- images for walls (on map)
+- add random factor to damage
+- update pathfinding when a step potentially becomes blocked (player regiments only)
+- incorporate pathfinding with long-range attack commands (button and mouse)
+- make pathfinding better (at long distance) <- WAYPOINTS
+- regiments with ranged attacks (player and monster)
+- move gates forward with city limits as if they were normal walls
+- mountains that block LOS
+- between-level upgrades
+- moving regiments should partially be in last location; make this work well with closing gates and attacking regiments that are on the move
+- structures should be their own terrain type (for movement speeds)
+- forest effects (i.e. protect against ranged attacks)
+- make gatehouse structure itself invincible (DESIGN too)
+- add encyclopedia for structures, towers, walls, regiments
+- ability for player to manually target towers
+
+
+
+== == == == == == == == == == == == == == == == == == == == == == == == == == == ==
+Converting to real-time
+- DONE: remove separate waves from levels
+- DONE: add "day length" and "night length", including default values
+- DONE: switch between night and day, indicate in graphically
+- DONE: build projects progress in real time
+- DONE: upgrades finish in real time
+- DONE: remove wave indicator from top of UI
+- DONE: move market panel to top of screen
+- DONE: add 'play sandbox' and 'play campaign' buttons
+- DONE: spawn player regiments
+- DONE: placeholder automatic/procedural monster generator (for 'sandbox' mode)
+- DONE: workers that build structures?
+
+- LATER: regenerate player regiments in real time? peasants for footmen
+- LATER: repairing structures?
+- LATER: repairing walls?
+- LATER: redo food system
+- LATER: peasant population growth
+- LATER: fog of war
+- LATER: resources on tiles (different from terrain type) including wood, scrap, and fertile land for farms
+
+
+== == == == == == == == == == == == == == == == == == == == == == == == == == == ==
+Design Ideas
+- slow/freeze towers
+- monster spellcasters
+- 'heroes' that accompany regiments (enemy spellcasters and champions, heroes with inter-level rpg elements for player)
+- "sapper" repair regiment
+- "hospital" struct that can heal regiments during defend phase
+- both wooden AND stone archer towers
+
+-> spell "slots" that player can fill from variety of spells provided by their structures (and they should be able to fill at least one slot from beginning)
