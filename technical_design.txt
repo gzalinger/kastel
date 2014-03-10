@@ -1,0 +1,93 @@
+ A place for technically/implementation-oriented design of features.
+== == == == == == == == == == == == == == == == == == == == == == == == == == == ==
+
+
+WALLS (new system)
+The city is automatically ringed by walls; the player no longer builds them segment-by-segment. Walls are upgraded in general: when the upgrade is purchased, all walls are automatically improved. Walls will not be built along roads, players must build gatehouses there. Repairing: when segments are destroyed, the player purchases them back with a global "repair walls" button. The cost is based on wall type and number of segments lost. All segments must be rebuilt together.
+The city must always have an opening. Ideally, this will be a gate. Lacking a gatehouse, one segment of wall will always be missing. This segment is defined in the level as an orientation at the town hall's tile. If a structure is built at the adjacent tile, the wall gap will move to that new tile with the same orientation. If a gap is made because a structure is built next to a road, the original gap will automatically close.
+
+PEASANT MILITIAS
+The militia is a defense tower-type structure for villages. It has the ability to convert nearby (i.e. adjacent) workers into a fighting unit. When the tower's "callup militia" ability is activated, the player selects an adjacent tile with workers to call up. It takes a short period of time to create the militia, during which the workers aren't producing, the tower cannot callup another militia, and a progress bar is shown. After this waiting period, a new regiment is created with one unit for each worker. The "home" structure's employee slots are locked until the militia is disbanded or destroyed. The regiment is created on the same tile as structure that was called up. If another regiment is there, it cannot be callup. If another regiment moves there during the callup process, that process is cancelled. Militia regiments have two additional controls: "go home", which moves them to their home structure and "disband". A militia must be at their home structure and not in combat in order to disband. The regiment disappears but does not produce anything until the disbanding process finishes. While disbanding, the militia cannot be called up again.
+
+ BREAD & POPULATION GROWTH (version 1) 
+ Hamlets get bread from adjacent farms. If a farm
+ borders two or more hamlets, it splits bread evenly. Bread is not produced in intervals
+ like other village products. Each type of hamlet requires a certain amount of bread to be
+ at 'max population growth'. Higher level hamlets require more bread but also produce
+ population faster while at max (efficiency per bread should be lower though). Getting more than max bread is a waste of bread. Hamlets
+ produce population at a rate specified in their type times what percent of max bread
+ they're receiving. When the hamlet has produced 1.0, a new peasant is created and can
+ immediately go to work. Peasant production does carry over between summer waves, but is
+ lost during the winter.
+
+ IMPLEMENTING BUILD TIMES FOR STRUCTURES 
+ City structures take multiple waves (turns) to
+ build or upgrade. Structures getting upgraded keep functioning at their original level
+ while the upgrade is going on. All costs are paid up front. Build projects (term which
+ encompasses new structures and upgrades) are initiated during the build phase and
+ complete on the beginning of a later build phase. Structures and upgrades can have a
+ 'build time' of zero, meaning they complete immediately. Once a build project has been
+ started, a 'BuildProject' object will be attached to the structure that stores remaining
+ build time and what new structure type will be used when the project finishes. New
+ structures are made immediately but have a build project with their current structure
+ type, indicating they haven't finished yet. These structures are not functional and do
+ not provide any benefits or services. FOR WALLS Walls that take multiple turns to build
+ will have an 'under construction' wall type. While they're still building, they'll use
+ that wall type (which will be much weaker).
+
+ VILLAGE PRODUCTION 
+ Resource production at village structures happens in real time during
+ the defend phase. Each employee at the structure works at the same rate. The structure
+ type will define how much resource is produced per-second-per-employee. The structure
+ will "build up" resources until it has 5 units, then the player will get it and the gain
+ will be shown visually. At the end of the wave, all remainders are given in the same way
+
+ PEASANT POPULATION 
+ Each hamlet has a max population it can hold and a list of peasant
+ that currently live there. Peasants also have a pointer to their home. A level will have
+ a starting population size and at the beginning of the level they'll be spread evenly
+ between hamlets. NOTE: this means levels *must* start with hamlets. Each village
+ structure has a number of employee slots that can be 'open' or 'closed'. Peasants will be
+ distributed (somehow) between open slots. Closing a filled spot will kick the employee
+ out and they'll find somewhere else to go. Slots can be opened or closed only during
+ defend phase. Also, structures can be "commanded" to fill a spot, in which case they'll
+ steal an employee from elsewhere.
+
+ UPGRADE IMPLEMENTATION 
+ Global list of upgrades that know their cost, unique id, whether
+ they've been bought yet, and prereqs (structures or other upgrades). Structures types
+ have list of upgrades available there. Structures instances are responsible for compiling
+ a list of available upgrades based on prereqs and what have/have not been bought yet.
+ There will be a call to "onUpgradeBought" when they're initially purchased, but most
+ effects must be implemented case-by-case where they actually take effect. At the end of a
+ level, all upgrades must be un-bought.
+
+ DEFENSE TYPES 
+ Each unit has a "defense type" that denotes what *kind* of protection they
+ have and a defense level (1-3) that indicates how thorough that protection is. Each
+ defense type is strong against different damage types. For example, plate armor blocks
+ damage from arrows (a.k.a. conventional attacks) but doesn't protect against magic.
+ Technical design: each defense type is a table with entries for all damage types and a
+ "percent blocked" modifier. Medium defense level (2 out of 3) uses that multiplier while
+ other defense levels use (for instance) 50% or 150% of the original multiplier. NOTE:
+ some units have no defenses (i.e. they take 100% damage from everything); this is the
+ "none" defense type.
+
+ GATEHOUSES 
+ Gatehouses are special structures with two purposes: one, they can be built on
+ roads and thus allow towns to span roadways. Second, their gate functions as a wall that
+ can be 'opened' allowing regiments to leave for sorties. Gatehouses consist of the
+ structure (on a tile), their gate (a wall i.e. transition), and two towers, one on either
+ side of the gate. These towers cannot be attacked.
+
+ MELEE COMBAT 
+ When a regiment attacks an adjacent enemy, a "fight" object is created with
+ the map transition between the two regiments.  Units from both regiments are assigned (in
+ some order TBD) to arrays within the fight object.  These arrays determine where the
+ units stand.  Once a unit has arrived at their given position, they start doing damage. 
+ Damage is dealt to the enemy in the corresponding position (or whatever is appropriate
+ when one regiment outnumbers the other).  When a unit dies, other units are shifted
+ within the position array and must reposition. NOTE: not all fighting positions are
+ "front line" (i.e. only a limited number of units can fight at once).  Only units in
+ front-line positions do and take damage.  When one dies, a unit from the back will step
+ into their place.
